@@ -35,6 +35,15 @@
 #include "hash_map.h"
 #include "list.h"
 
+/**
+LRU (Least Recently Used) 移除策略是 LruCache 中使用的一种缓存淘汰算法。
+LRU 的全称是 Least Recently Used,也就是最近最少使用。它的基本思想是:
+如果一个数据在最近一段时间没有被访问或使用,那么在将来它被访问的可能性也会低。
+所以LRU算法会优先移除最不经常被访问的数据,也就是那些“最近最少使用”的数据,以此来为新的数据腾出空间。
+具体来说,LruCache 中的数据是以链表来存储的。当一个数据被访问时,会将它移到链表头部,也就是说最新访问的数据在头部,久未访问的数据在尾部。当缓存满时需要移除数据,那么就可以直接移除链表尾部的数据,因为那是最不经常访问的数据。
+这种算法实际上是利用了“最近使用的setData可能再次被访问,那么应该保留在缓存中;久未访问的数据可能不会被访问,那么优先从缓存中移除”这一局部性原理来设计的。
+所以LRU算法能够保留热点数据,移除冷数据,从而使缓存命中率得到提升。这就是 LruCache 选择 LRU作为缓存置换算法的原因。
+ */
 template <class TKey, class TData, class Hasher = HashMapHasherDefault, class Comparator = HashMapComparatorDefault<TKey>>
 class LRUCache {
 private:
@@ -65,7 +74,7 @@ public:
 			_map.erase(p_key);
 		}
 		_map[p_key] = _list.front();
-
+        //擦除末尾的低利用率数据
 		while (_map.size() > capacity) {
 			Element d = _list.back();
 			_map.erase(d->get().key);
