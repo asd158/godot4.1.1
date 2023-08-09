@@ -66,10 +66,10 @@ public:
 			uint32_t pages_used = pages_allocated;
 
 			pages_allocated++;
-			page_pool = (T **)memrealloc(page_pool, sizeof(T *) * pages_allocated);
-			available_pool = (T ***)memrealloc(available_pool, sizeof(T **) * pages_allocated);
+			page_pool = (T **)memrealloc(page_pool, sizeof(T *) * pages_allocated);//分配多少个page
+			available_pool = (T ***)memrealloc(available_pool, sizeof(T **) * pages_allocated);//
 
-			page_pool[pages_used] = (T *)memalloc(sizeof(T) * page_size);
+			page_pool[pages_used] = (T *)memalloc(sizeof(T) * page_size);//当前的新page，正式申请page内存
 			available_pool[pages_used] = (T **)memalloc(sizeof(T *) * page_size);
 
 			for (uint32_t i = 0; i < page_size; i++) {
