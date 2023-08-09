@@ -39,6 +39,9 @@
 #include <initializer_list>
 #include <type_traits>
 
+//LocalVector对内存的控制更加精细,提供了常用的额外接口,但实现相对简单,不如std::vector高效。
+//适合一些对内存控制要求较高、容器功能较简单的场景。在不需要std::vector全部功能的情况下,LocalVector是一个不错的选择。
+
 // If tight, it grows strictly as much as needed.
 // Otherwise, it grows exponentially (the default and what you want in most cases).
 template <class T, class U = uint32_t, bool force_trivial = false, bool tight = false>
@@ -75,9 +78,11 @@ public:
 		ERR_FAIL_UNSIGNED_INDEX(p_index, count);
 		count--;
 		for (U i = p_index; i < count; i++) {
+            //移动后续的其他元素
 			data[i] = data[i + 1];
 		}
 		if constexpr (!std::is_trivially_destructible<T>::value && !force_trivial) {
+            //析构的是最后一项，有点意思
 			data[count].~T();
 		}
 	}

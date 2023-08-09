@@ -230,6 +230,7 @@ void CowData<T>::_unref(void *p_data) {
 	Memory::free_static((uint8_t *)p_data, true);
 }
 
+// 所有开的api，除了const的，都需要调用一下这个函数，拷贝一个副本，删除原先的。
 template <class T>
 uint32_t CowData<T>::_copy_on_write() {
 	if (!_ptr) {

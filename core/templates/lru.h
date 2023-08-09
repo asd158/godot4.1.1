@@ -96,6 +96,7 @@ public:
 	const TData &get(const TKey &p_key) {
 		Element *e = _map.getptr(p_key);
 		CRASH_COND(!e);
+        //往前翻数据
 		_list.move_to_front(*e);
 		return (*e)->get().data;
 	};
@@ -105,7 +106,8 @@ public:
 		if (!e) {
 			return nullptr;
 		} else {
-			_list.move_to_front(*e);
+            //往前翻数据
+            _list.move_to_front(*e);
 			return &(*e)->get().data;
 		}
 	}
